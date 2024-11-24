@@ -1,0 +1,24 @@
+
+  
+/* FilterOptions.css */
+.filter-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .filter-options input[type='radio'] {
+    margin-right: 10px;
+  }
+  
+  .filter-options label {
+    margin-right: 20px;
+    font-size: 16px;;
+    color: #090909;
+  }
+  
+  button:hover {
+    background-color: #555;
+  }
+  

@@ -1,3 +1,4 @@
+
 body, html {
     margin: 0;
     padding: 0;
@@ -25,8 +26,12 @@ body, html {
     padding: 1rem;
     gap: 1rem;
     border-bottom: 3px solid #272626; 
-     
 
+    font-family: "Tangerine", cursive;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 1.3rem;
+    
   }
   
   .header img {
@@ -35,7 +40,6 @@ body, html {
   }
   
   .header h1 {
-    font-size: 1.25rem;
     font-weight: bold;
     color: #f5f8fa;
   }

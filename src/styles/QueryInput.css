@@ -18,9 +18,10 @@
     border: 2px solid #272626;
     font-size: 16px; 
     color: #333; 
+    text-align: right;
   }
   
-  .query-input select {
+  .query-input select, .query-input button {
     outline: none;
     padding: 10px; 
     border-radius: 10px ;
@@ -31,3 +32,9 @@
     color: #333; 
   }
   
+
+  .query-input button{
+    color: #e1e8ed;
+    background-color: #067ec9;
+    font-weight: bolder; 
+  }

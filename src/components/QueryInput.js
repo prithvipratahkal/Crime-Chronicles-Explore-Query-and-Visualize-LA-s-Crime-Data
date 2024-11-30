@@ -11,12 +11,28 @@ function QueryInput({ setViewType }) {
 
   const handleInputKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // Prevent the default form submission
+      if (query.trim() !== '') {
+        e.preventDefault(); // Prevent the default form submission
+        console.log("query entered by user: ", {query});
+        // setQuery(''); // Clear the input field
+      }
+    }
+  };
+
+  const handleSubmit = () => {
+    if (query.trim() !== '') {
+      console.log("query entered by user: ", {query});
+      // setQuery(''); // Clear the input field
     }
   };
   
   return (
     <div className="query-input">
+      <select onChange={handleDropdownChange}>
+        <option value="chart">Chart</option>
+        <option value="text">Text</option>
+      </select>
+
       <input
         type="text"
         placeholder="Type your crime data query here..."
@@ -24,10 +40,9 @@ function QueryInput({ setViewType }) {
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleInputKeyDown} // Add this handler
       />
-      <select onChange={handleDropdownChange}>
-        <option value="chart">Chart</option>
-        <option value="text">Text</option>
-      </select>
+      
+      <button onClick={handleSubmit}>Go</button> {/* Submit button */}
+      
     </div>
   );
   

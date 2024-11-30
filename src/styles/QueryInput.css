@@ -1,34 +1,33 @@
 .query-input {
-    margin: 20px 0;
+    width: 80%;
+    margin-inline: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 1rem;
   }
   
   .query-input input {
     min-width: 400px;
-    margin-right: 10px;
     outline: none;
     background-color: azure;
     flex: 1;
     padding: 10px; 
-    border-radius: 5px ; 
-    border: 2px solid #2e2c2c;
+    border-radius: 10px ; 
+    background-color: #e1e8ed;
+    border: 2px solid #272626;
     font-size: 16px; 
-    background-color: #d3d3d3;
     color: #333; 
   }
   
   .query-input select {
     outline: none;
-    
     padding: 10px; 
-    border-radius: 5px;;
+    border-radius: 10px ;
+    background-color: #e1e8ed;
     border: 2px solid #272626;
-    background-color: #d3d3d3;
     font-size: 16px; 
     cursor: pointer;
-    color: #472b2b; 
+    color: #333; 
   }
   

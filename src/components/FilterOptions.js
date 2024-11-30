@@ -11,7 +11,7 @@ function FilterOptions({ onFilterChange }) {
           value="crimeType"
           onChange={onFilterChange}
         />
-        Crime Type
+        <span>Crime Type</span>
       </label>
       <label>
         <input
@@ -20,7 +20,7 @@ function FilterOptions({ onFilterChange }) {
           value="timeRange"
           onChange={onFilterChange}
         />
-        Time Range
+        <span>Time Range</span>
       </label>
     </div>
   );

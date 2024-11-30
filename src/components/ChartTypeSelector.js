@@ -1,12 +1,12 @@
 import React from 'react';
+import '../styles/FilterOptions.css';
+
 
 function ChartTypeSelector({ setChartType }) {
   return (
-
-  <div style={{margin:'15px'}}>        
-    <div style={{ marginTop: '20px' }}>
-      <span>Chart Type:</span>
-      <label style={{ marginLeft: '10px' }}>
+    <div className="chart-type-selector" >
+      <strong><span>Chart Type:</span></strong>
+      <label>
         <input
           type="radio"
           name="chartType"
@@ -14,27 +14,27 @@ function ChartTypeSelector({ setChartType }) {
           defaultChecked
           onChange={(e) => setChartType(e.target.value)}
         />
-        Pie Chart
+        <span>Pie Chart</span>
+        
       </label>
-      <label style={{ marginLeft: '10px' }}>
+      <label>
         <input
           type="radio"
           name="chartType"
           value="bar"
           onChange={(e) => setChartType(e.target.value)}
         />
-        Bar Chart
+        <span>Bar Chart</span>
       </label>
-      <label style={{ marginLeft: '10px' }}>
+      <label>
         <input
           type="radio"
           name="chartType"
-          value="heatmap"
+          value="line"
           onChange={(e) => setChartType(e.target.value)}
         />
-        Heatmap
+        <span>Line</span>
       </label>
-    </div>
     </div>
     
   );

@@ -10,21 +10,9 @@ body {
     text-align: center;
     padding: 20px;
   }
-  
-  .query-input {
-    margin-bottom: 20px;
-  }
-  
-  .filter-options {
-    margin-bottom: 20px;
-  }
-  
-  .visualization {
-    margin: 20px auto;
+    
+ .visualization {
+    margin-inline:auto;
     text-align: center;
-  }
-  
-  .chart-type-selector {
-    margin-top: 20px;
   }
   

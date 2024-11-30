@@ -3,18 +3,8 @@ import React from 'react';
 import ChartComponent from './ChartComponent'
 
 
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-
 // Import the CSS file
 import '../styles/Visualization.css';
-
-// Register required components
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Visualization({ chartType, viewType }) { // just for sample output!
   const chartData = {
@@ -49,7 +39,7 @@ function Visualization({ chartType, viewType }) { // just for sample output!
   //     </div>
   //   </div>
   // );
-
+  
   return (
     <div>
       {/* Send chartData and chartType to the ChartComponent */}

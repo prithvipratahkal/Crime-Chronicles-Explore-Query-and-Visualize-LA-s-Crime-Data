@@ -36,7 +36,7 @@ function App() {
         justifyContent: "space-between",
         alignItems: "center",
         }}>
-        {viewType === 'chart' && <ChartTypeSelector setChartType={setChartType} />}
+        {viewType === 'chart' && <ChartTypeSelector chartType={chartType} setChartType={setChartType} />}
         {/* <FilterOptions onFilterChange={handleFilterChange} /> */}
       </div>
       <QueryInput setViewType={handleViewTypeChange} />

@@ -1,58 +1,79 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 function ChartComponent({ chartData, chartType }) {
-    
-const getChartOptions = () => {
-    const animationSettings = {
-      duration: 1000, // Duration for transitions
-      easing: 'easeInOutQuad', // Smooth easing
-    };
+  const [chartOptions, setChartOptions] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    return {
-      chart: {
-        type: chartType, // Use chartType directly
-        animation: animationSettings, // Add animation settings
-      },
-      title: {
-        text: chartData.title, // Title from chartData
-      },
-      xAxis: chartType !== 'pie' ? { // Only for non-pie charts
-        categories: chartData.labels,
-      } : undefined,
-      yAxis: chartType !== 'pie' ? { // Only for non-pie charts
-        title: {
-          text: 'Crime Count',
+  useEffect(() => {
+    setLoading(true);
+    const timeout = setTimeout(() => {
+      setChartOptions({
+        chart: {
+          type: chartType,
+          animation: {
+            duration: 800, // Animate data points
+          },
         },
-      } : undefined,
-      series: [{
-        name: chartType === 'pie' ? 'Crime Type' : 'Crime Count', // Series name changes based on chartType
-        data: chartType === 'pie'
-          ? chartData.labels.map((label, index) => ({
-              name: label,
-              y: chartData.datasets[0].data[index],
-            }))
-          : chartData.datasets[0].data, // For bar/line, use raw data
-        animation: animationSettings, // Series-specific animation
-      }],
-    };
-  };
+        title: {
+          text: chartData.title,
+        },
+        xAxis: chartType !== 'pie' ? {
+          categories: chartData.labels,
+        } : undefined,
+        yAxis: chartType !== 'pie' ? {
+          title: {
+            text: 'Crime Count',
+          },
+        } : undefined,
+        series: [{
+          name: chartType === 'pie' ? 'Crime Type' : 'Crime Count',
+          data: chartType === 'pie'
+            ? chartData.labels.map((label, index) => ({
+                name: label,
+                y: chartData.datasets[0].data[index],
+              }))
+            : chartData.datasets[0].data,
+        }],
+      });
+      setLoading(false);
+    }, 100);
 
+    return () => clearTimeout(timeout);
+  }, [chartType, chartData]);
 
   return (
     <div style={{
-        width: '80%',
-        marginInline: 'auto',
-        borderRadius: '15px',
-        overflow: 'hidden',
-        border: 'solid 2px #272626', 
-        padding: '1rem',
+      width: '80%',
+      height: 'fit-content', // Set a fixed height for consistent layout
+      marginInline: 'auto',
+      borderRadius: '15px',
+      overflow: 'hidden',
+      border: 'solid 2px #272626', 
+      padding: '1rem',
+      display: 'flex',
+      justifyContent: 'center',
     }}>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={getChartOptions(chartType)} // Pass the options dynamically based on the selected chart type
-      />
+      {loading ? (
+        // Display a loader or a placeholder while loading
+        <div style={{
+          width: '100%',
+          minHeight: '400px',
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#aaa',
+        }}>
+          {/* Loading chart... */}
+        </div>
+      ) : (
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={chartOptions}
+        />
+      )}
     </div>
   );
 }

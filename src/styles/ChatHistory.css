@@ -34,6 +34,7 @@ border-radius: 15px;
 
 .message.user .message-content {
 background-color: #067ec9;  /* User messages */
+background-color: #333;  /* User messages */
 color: white;
 }
 

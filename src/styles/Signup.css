@@ -1,0 +1,26 @@
+.signup-container{
+    /* border: solid 1px blue; */
+    display: flex;
+    width: 80vw;
+    margin-inline: auto;
+    justify-content: space-evenly;
+    margin-block: 3rem;
+}
+
+.signup-container div{
+    text-align: center;
+    /* border: solid 1px red; */
+    margin-block: 0.5rem;
+}
+
+.signup-container button{
+    color: #e1e8ed;
+    background-color: #067ec9;
+    font-weight: bolder; 
+    outline: none;
+    padding: 10px; 
+    border-radius: 10px ;
+    border: 2px solid #272626;
+    font-size: 16px; 
+    cursor: pointer;
+}

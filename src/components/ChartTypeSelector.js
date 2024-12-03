@@ -35,7 +35,7 @@ function ChartTypeSelector({ chartType, setChartType }) {
           checked={chartType === 'line'}
           onChange={(e) => setChartType(e.target.value)}
         />
-        <span>Line</span>
+        <span>Line Chart</span>
       </label>
     </div>
     

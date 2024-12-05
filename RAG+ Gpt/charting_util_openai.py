@@ -160,8 +160,8 @@ def interactive_session_with_openai(user_query, chart_type, embeddings_file, met
     # Create FAISS index
     index = create_faiss_index(embeddings)
 
-    if user_query.lower() == "exit":
-        break
+    # if user_query.lower() == "exit":
+    #     break
 
     if chart_type not in {"bar", "line", "pie"}:
         # Fallback for unsupported chart type
@@ -228,7 +228,7 @@ metadata_file = "metadata.json"
 # Run interactive session
 
 @app.post("/query")
-def read_root():
+async def read_root(request: Request):
     body = await request.json()
     query = body['query']
     chart_type = body['chart_type']

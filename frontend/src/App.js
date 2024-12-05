@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './style.css';
 import Header from './components/Header';
 import QueryInput from './components/QueryInput';
-import FilterOptions from './components/FilterOptions';
 import Visualization from './components/Visualization';
 import ChartTypeSelector from './components/ChartTypeSelector';
 import ChatHistory from './components/ChatHistory';
@@ -13,17 +12,9 @@ import './styles/App.css';
 function App() {
   const [chartType, setChartType] = useState('pie'); // Default chart type
   const [viewType, setViewType] = useState('chart'); // Default view type
-  const [filter, setFilter] = useState('crimeType'); // Default filter
-  const [isLoggedIn, setIsLoggedIn] = useState(false) // User logged out by default
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
+  const [isLoggedIn, setIsLoggedIn] = useState(true) // User logged out by default
+  
   // console.log("Chart type changed to : ", chartType);
-
-  // Handle filter changes
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-  };
 
   // Handle view type changes (chart or text)
   const handleViewTypeChange = (viewType) => {
@@ -45,23 +36,22 @@ function App() {
           justifyContent:'space-evenly',
           marginInline:"auto",
           display:'flex',
-          gap:'3rem',
-          marginBlock:'4rem'
+          marginBlock:'2.5rem'
         }}>
-          <Signup setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} setPassword={setPassword} username={username} password={password}/>
-          <Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} setPassword={setPassword} username={username} password={password}/>
+          <Signup setIsLoggedIn={setIsLoggedIn}/>
+          <Login setIsLoggedIn={setIsLoggedIn}/>
         </div>
       ) : ( // When user is logged in
         <> 
           <div style={{
             textAlign:"right",
-            marginInline:"2rem",
             // border:'solid 1px black',
             display:'flex',
-            justifyContent:'space-between',
+            justifyContent:'end',
             alignItems:'center',
+            marginInline:'2rem'
           }}>
-            <h3>Welcome, {username}!</h3>
+            {/* <h3>Welcome</h3> */}
             <button style={{
               background: "transparent", 
               fontWeight: "bold", 
@@ -82,9 +72,8 @@ function App() {
             alignItems: "center",
             }}>
             {viewType === 'chart' && <ChartTypeSelector chartType={chartType} setChartType={setChartType} />}
-            {/* <FilterOptions onFilterChange={handleFilterChange} /> */}
           </div>
-          <QueryInput setViewType={handleViewTypeChange} />
+          <QueryInput setViewType={handleViewTypeChange} chartType={chartType} setChartType={setChartType} />
       </>
       )}
     </div>

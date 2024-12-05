@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from pydantic import BaseModel
 from typing import List, Optional
-from backend.crime_search_engine import CrimeSearchEngine
+from crime_search_engine import CrimeSearchEngine
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from passlib.context import CryptContext
@@ -117,16 +117,26 @@ async def query_api(request: Request):
     """API to query the CrimeSearchEngine."""
     body = await request.json()
     user_query = body.get("user_query")
+    is_chart = body.get("is_chart")
+
+    if is_chart:
+        chart_type = body.get("chart_type")
+
+    print(f"USER QUERY IS {user_query}")
 
     if not user_query:
         raise HTTPException(status_code=400, detail="Missing user query")
+    
+    try: 
+        if is_chart:
+            # call charting_with_openai
+            search_engine.create_charts(user_query, chart_type)
 
-    try:
-        results = search_engine.query_embeddings(query=user_query)
-        return QueryResponse(results=results, message="Query processed successfully.")
+        else:
+            # call texting_with_openai
+            search_engine.texting_with_openai(user_query)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
 
 @app.get("/")
 def read_root():

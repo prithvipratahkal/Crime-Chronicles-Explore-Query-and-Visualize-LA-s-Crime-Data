@@ -47,6 +47,7 @@ const Signup = ({setIsLoggedIn, setUsername, setPassword, username, password}) =
             type="text"
             onChange={(e) => setUsername(e.target.value)}
             required
+            data-testid="username"
           />
         </div>
         <div>
@@ -55,6 +56,7 @@ const Signup = ({setIsLoggedIn, setUsername, setPassword, username, password}) =
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             required
+            data-testid="password"
           />
         </div>
         <button type="submit">Signup</button>

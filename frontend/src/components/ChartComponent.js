@@ -57,7 +57,7 @@ function ChartComponent({ chartData, chartType }) {
     }}>
       {loading ? (
         // Display a loader or a placeholder while loading
-        <div style={{
+        <div data-testid="loading" style={{
           width: '100%',
           minHeight: '400px',
           backgroundColor: 'transparent',

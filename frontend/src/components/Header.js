@@ -6,8 +6,8 @@ import '../styles/Header.css';
 
 function Header() {
   return (
-    <div class="header-container">
-        <div class="header">
+    <div className="header-container" role="banner">
+        <div className="header">
             <img src={logo} alt="Logo" />
             <h1>Crime Chronicles</h1>
         </div>

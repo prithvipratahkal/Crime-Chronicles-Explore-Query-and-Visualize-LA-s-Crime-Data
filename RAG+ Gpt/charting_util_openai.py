@@ -159,6 +159,48 @@ def create_faiss_index(embeddings):
 #         print(f"Chart data saved to {filename}")
 
 # Main interactive session
+# def interactive_session_with_openai(embeddings_file, metadata_file):
+#     # Load data
+#     embeddings, metadata = load_embeddings_and_metadata(embeddings_file, metadata_file)
+
+#     # Create FAISS index
+#     index = create_faiss_index(embeddings)
+
+#     # Start Q&A session
+#     print("\nStarting enhanced Q&A session with OpenAI API. Type 'exit' to quit.")
+#     while True:
+#         user_query = input("\nEnter your query: ").strip()
+#         if user_query.lower() == "exit":
+#             break
+
+#         # Ask user for preferred chart type
+#         chart_type = input("\nEnter the preferred chart type (bar/line/pie): ").strip().lower()
+#         if chart_type not in {"bar", "line", "pie"}:
+#             print("Unsupported chart type. Please choose 'bar', 'line', or 'pie'.")
+#             continue
+
+#         try:
+#             # Query the index and get visualization data
+#             results, chart_data = query_and_visualize_with_openai(index, user_query, metadata, chart_type, model_name='all-MiniLM-L6-v2', k=10)
+
+#             # Display results
+#             print("\nTop matches:")
+#             for result in results:
+#                 print(f"Document: {result['metadata']}")
+#                 print(f"Distance: {result['distance']}\n")
+
+#             # Transform, display, and save chart data if generated
+#             if chart_data:
+#                 formatted_chart_data = transform_chart_data_to_format(chart_data)
+#                 print("\nTransformed Chart Data:")
+#                 print(json.dumps(formatted_chart_data, indent=4))
+                
+#             else:
+#                 print("No chart data generated.")
+#         except Exception as e:
+#             print(f"Error during query processing: {e}")
+
+
 def interactive_session_with_openai(embeddings_file, metadata_file):
     # Load data
     embeddings, metadata = load_embeddings_and_metadata(embeddings_file, metadata_file)
@@ -175,8 +217,43 @@ def interactive_session_with_openai(embeddings_file, metadata_file):
 
         # Ask user for preferred chart type
         chart_type = input("\nEnter the preferred chart type (bar/line/pie): ").strip().lower()
+
         if chart_type not in {"bar", "line", "pie"}:
-            print("Unsupported chart type. Please choose 'bar', 'line', or 'pie'.")
+            # Fallback for unsupported chart type
+            print("\nUnsupported chart type. Generating a text-based response instead...")
+            try:
+                # Query FAISS index
+                query_embedding = generate_query_embedding(user_query, model_name='all-MiniLM-L6-v2')
+                distances, indices = index.search(query_embedding, k=10)
+
+                # Prepare results
+                results = [{"metadata": metadata[idx], "distance": float(distances[0][i])} for i, idx in enumerate(indices[0])]
+
+                # Prepare data for GPT
+                result_summary = "\n".join(
+                    [f"Data: {json.dumps(result['metadata'])}" for result in results[:5]]
+                )
+
+                # Generate a verbose explanation using GPT
+                chatgpt_prompt = f"""
+                The user queried: "{user_query}".
+                Based on the top matching results below, provide a general, user-friendly explanation:
+                Results:
+                {result_summary}
+
+                Instructions:
+                - Summarize the insights derived from the results.
+                - Explain the relevance of the data to the query without mentioning specific document numbers or IDs.
+                - Use clear and concise language.
+                Respond with the explanation only.
+                """
+                response = call_openai_with_retry(chatgpt_prompt)
+                explanation = response["choices"][0]["message"]["content"].strip()
+
+                print("\nGenerated Explanation:")
+                print(explanation)
+            except Exception as e:
+                print(f"Error during text response generation: {e}")
             continue
 
         try:
@@ -186,7 +263,7 @@ def interactive_session_with_openai(embeddings_file, metadata_file):
             # Display results
             print("\nTop matches:")
             for result in results:
-                print(f"Document: {result['metadata']}")
+                print(f"Metadata: {result['metadata']}")
                 print(f"Distance: {result['distance']}\n")
 
             # Transform, display, and save chart data if generated
@@ -194,11 +271,11 @@ def interactive_session_with_openai(embeddings_file, metadata_file):
                 formatted_chart_data = transform_chart_data_to_format(chart_data)
                 print("\nTransformed Chart Data:")
                 print(json.dumps(formatted_chart_data, indent=4))
-                
             else:
                 print("No chart data generated.")
         except Exception as e:
             print(f"Error during query processing: {e}")
+
 
 # File paths
 embeddings_file = "embeddings.npy"

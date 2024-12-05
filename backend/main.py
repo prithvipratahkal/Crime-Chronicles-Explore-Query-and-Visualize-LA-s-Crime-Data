@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, Depends
 from pydantic import BaseModel
 from typing import List, Optional
-from crime_search_engine import CrimeSearchEngine
+from backend.crime_search_engine import CrimeSearchEngine
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from passlib.context import CryptContext

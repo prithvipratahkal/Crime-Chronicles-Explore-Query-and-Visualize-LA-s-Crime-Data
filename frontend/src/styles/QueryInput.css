@@ -1,0 +1,40 @@
+.query-input {
+    width: 80%;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .query-input input {
+    min-width: 400px;
+    outline: none;
+    background-color: azure;
+    flex: 1;
+    padding: 10px; 
+    border-radius: 10px ; 
+    background-color: #e1e8ed;
+    border: 2px solid #272626;
+    font-size: 16px; 
+    color: #333; 
+    text-align: right;
+  }
+  
+  .query-input select, .query-input button {
+    outline: none;
+    padding: 10px; 
+    border-radius: 10px ;
+    background-color: #e1e8ed;
+    border: 2px solid #272626;
+    font-size: 16px; 
+    cursor: pointer;
+    color: #333; 
+  }
+  
+
+  .query-input button{
+    color: #e1e8ed;
+    background-color: #067ec9;
+    font-weight: bolder; 
+  }

@@ -6,8 +6,7 @@ import faiss
 import os
 import time
 
-# OpenAI API Key
-openai.api_key = ""
+openai.api_key = "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"
 # Suppress tokenizer parallelism warnings
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -31,11 +30,11 @@ def call_openai_with_retry(prompt, retries=3, delay=10):
                 timeout=60
             )
             return response
-        except (openai.error.APIError, openai.error.Timeout) as e:
+        except Exception as e:  # Catch all exceptions, including OpenAI-related issues
             print(f"API error: {e}. Retrying in {delay} seconds... ({attempt + 1}/{retries})")
             time.sleep(delay)
     raise Exception("Failed to connect to OpenAI API after multiple attempts.")
-
+   
 # Query FAISS index with enhanced functionality
 def query_and_visualize_with_openai(index, query, metadata, chart_type, model_name='all-MiniLM-L6-v2', k=10):
     # Generate embedding for the query
@@ -150,56 +149,6 @@ def create_faiss_index(embeddings):
     index.add(embeddings)
     print(f"FAISS index created with {index.ntotal} embeddings")
     return index
-
-# # Save chart data to JSON
-# def save_chart_data(chart_data, filename="chart_data.json"):
-#     if chart_data:
-#         with open(filename, "w") as file:
-#             json.dump(chart_data, file, indent=4)
-#         print(f"Chart data saved to {filename}")
-
-# Main interactive session
-# def interactive_session_with_openai(embeddings_file, metadata_file):
-#     # Load data
-#     embeddings, metadata = load_embeddings_and_metadata(embeddings_file, metadata_file)
-
-#     # Create FAISS index
-#     index = create_faiss_index(embeddings)
-
-#     # Start Q&A session
-#     print("\nStarting enhanced Q&A session with OpenAI API. Type 'exit' to quit.")
-#     while True:
-#         user_query = input("\nEnter your query: ").strip()
-#         if user_query.lower() == "exit":
-#             break
-
-#         # Ask user for preferred chart type
-#         chart_type = input("\nEnter the preferred chart type (bar/line/pie): ").strip().lower()
-#         if chart_type not in {"bar", "line", "pie"}:
-#             print("Unsupported chart type. Please choose 'bar', 'line', or 'pie'.")
-#             continue
-
-#         try:
-#             # Query the index and get visualization data
-#             results, chart_data = query_and_visualize_with_openai(index, user_query, metadata, chart_type, model_name='all-MiniLM-L6-v2', k=10)
-
-#             # Display results
-#             print("\nTop matches:")
-#             for result in results:
-#                 print(f"Document: {result['metadata']}")
-#                 print(f"Distance: {result['distance']}\n")
-
-#             # Transform, display, and save chart data if generated
-#             if chart_data:
-#                 formatted_chart_data = transform_chart_data_to_format(chart_data)
-#                 print("\nTransformed Chart Data:")
-#                 print(json.dumps(formatted_chart_data, indent=4))
-                
-#             else:
-#                 print("No chart data generated.")
-#         except Exception as e:
-#             print(f"Error during query processing: {e}")
-
 
 def interactive_session_with_openai(embeddings_file, metadata_file):
     # Load data

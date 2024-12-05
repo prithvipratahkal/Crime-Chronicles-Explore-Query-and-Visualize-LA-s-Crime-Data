@@ -8,6 +8,7 @@ import ChatHistory from './components/ChatHistory';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import './styles/App.css';
+import { Helmet } from 'react-helmet';
 
 function App() {
   const [chartType, setChartType] = useState('pie'); // Default chart type
@@ -27,6 +28,37 @@ function App() {
   };
 
   return (
+    <>
+      {/* Helmet for SEO */}
+      <Helmet>
+        <title>Crime Chronicles - Explore and Visualize Crime Data</title>
+        <meta
+          name="description"
+          content="Explore crime data with AI-driven insights, interactive charts, and detailed analytics. Sign up to access detailed crime reports."
+        />
+        <meta
+          name="keywords"
+          content="crime data, analytics, AI insights, interactive charts, crime statistics, data visualization"
+        />
+        <meta property="og:title" content="Crime Chronicles - Explore and Visualize Crime Data" />
+        <meta
+          property="og:description"
+          content="Visualize and analyze crime data with interactive charts and AI-driven insights. Sign up for detailed reports."
+        />
+        
+        <meta property="og:url" content="https://www.crimechronicles.com" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Crime Chronicles - Explore and Visualize Crime Data" />
+        <meta
+          name="twitter:description"
+          content="Explore crime trends with AI-driven insights and charts. Sign up for detailed crime reports."
+        />
+        <meta name="twitter:site" content="@crimechronicles" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Helmet>
+
+
     <div className="container">
       <Header />
       {!isLoggedIn ? ( // When user is not logged in
@@ -77,6 +109,7 @@ function App() {
       </>
       )}
     </div>
+    </>
   );
 }
 

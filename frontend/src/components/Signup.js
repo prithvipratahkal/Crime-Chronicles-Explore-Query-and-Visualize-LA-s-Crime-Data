@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/Signup.css';
+import { Helmet } from 'react-helmet';
 
 
 const Signup = () => {
@@ -63,6 +64,16 @@ const Signup = () => {
   // };
 
   return (
+    <>
+    <Helmet>
+      <title>Sign Up - Crime Chronicles</title>
+      <meta
+        name="description"
+        content="Sign up for Crime Chronicles to access crime data analytics, AI-driven insights, and interactive visualizations."
+      />
+      <meta name="keywords" content="signup, crime data analytics, AI insights, charts" />
+    </Helmet>
+
     <div className='signup-div'>
       <div>
         <small>New User?</small>
@@ -115,6 +126,7 @@ const Signup = () => {
       {error && <p>{error}</p>}
       {successMessage && <p>{successMessage}</p>}
     </div>
+    </>
   );
 };
 

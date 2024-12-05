@@ -5,6 +5,10 @@ import ChartComponent from './ChartComponent'
 
 // Import the CSS file
 import '../styles/Visualization.css';
+import { Helmet } from 'react-helmet';
+import React, { lazy, Suspense } from 'react';
+
+const ChartComponent = lazy(() => import('./ChartComponent'));
 
 function Visualization({ chartType, viewType }) { // just for sample output!
   const chartData = {
@@ -20,6 +24,16 @@ function Visualization({ chartType, viewType }) { // just for sample output!
 
   if (viewType === 'text') {
     return (
+      <>
+      <Helmet>
+        <title>Visualization - Crime Analytics</title>
+        <meta
+          name="description"
+          content="Explore crime data with interactive visualizations, including pie charts, bar graphs, and line charts."
+        />
+      </Helmet>
+
+
       <div className="text-container">
         <h3>Response</h3>
         <textarea
@@ -28,6 +42,7 @@ function Visualization({ chartType, viewType }) { // just for sample output!
           value="Sample Text Output: Theft is the most reported crime in 2022."
         />
       </div>
+      </>
     );
   }
 
@@ -43,7 +58,9 @@ function Visualization({ chartType, viewType }) { // just for sample output!
   return (
     <div>
       {/* Send chartData and chartType to the ChartComponent */}
-      <ChartComponent chartData={chartData} chartType={chartType} />
+      <Suspense fallback={<div>Loading chart...</div>}>
+        <ChartComponent chartData={chartData} chartType={chartType} />
+      </Suspense>
     </div>
   );
 

@@ -41,3 +41,10 @@
     cursor: pointer;
     margin-block-start: 1rem;
 }
+@media screen and (max-width: 768px) {
+    .signup-div {
+      padding: 20px;
+      font-size: 14px;
+    }
+  }
+  

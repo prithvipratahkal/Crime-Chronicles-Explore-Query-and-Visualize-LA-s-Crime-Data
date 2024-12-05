@@ -15,6 +15,8 @@ function App() {
   const [viewType, setViewType] = useState('chart'); // Default view type
   const [filter, setFilter] = useState('crimeType'); // Default filter
   const [isLoggedIn, setIsLoggedIn] = useState(false) // User logged out by default
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   // console.log("Chart type changed to : ", chartType);
 
@@ -37,16 +39,29 @@ function App() {
     <div className="container">
       <Header />
       {!isLoggedIn ? ( // When user is not logged in
-        <div className='signup-container'>
-          <Signup setIsLoggedIn={setIsLoggedIn} />
-          <Login setIsLoggedIn={setIsLoggedIn} />
+        <div style={{
+          width:"80vw",
+          // border:"solid 1px black",
+          justifyContent:'space-evenly',
+          marginInline:"auto",
+          display:'flex',
+          gap:'3rem',
+          marginBlock:'4rem'
+        }}>
+          <Signup setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} setPassword={setPassword} username={username} password={password}/>
+          <Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} setPassword={setPassword} username={username} password={password}/>
         </div>
       ) : ( // When user is logged in
         <> 
           <div style={{
             textAlign:"right",
             marginInline:"2rem",
+            // border:'solid 1px black',
+            display:'flex',
+            justifyContent:'space-between',
+            alignItems:'center',
           }}>
+            <h3>Welcome, {username}!</h3>
             <button style={{
               background: "transparent", 
               fontWeight: "bold", 

@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import '../styles/Signup.css';
 
 
-const Login = ({setIsLoggedIn}) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+const Login = ({setIsLoggedIn, setUsername, setPassword, username, password}) => {
+  const [loginMessage, setLoginMessage] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -15,7 +13,7 @@ const Login = ({setIsLoggedIn}) => {
         setIsLoggedIn(true);
     }
     else{
-        setMessage("Username or Password is incorrect!");
+        setLoginMessage("Username or Password is incorrect!");
     }
 
     // if (result.success) {
@@ -27,14 +25,16 @@ const Login = ({setIsLoggedIn}) => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className='login-div'>
+      <div>
+        <small>Already a User?</small>
+        <h2>Log In</h2>
+      </div>
       <form onSubmit={handleLogin}>
         <div>
           <label>Username:</label>
           <input
             type="text"
-            value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
@@ -43,14 +43,13 @@ const Login = ({setIsLoggedIn}) => {
           <label>Password:</label>
           <input
             type="password"
-            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
         <button type="submit">Login</button>
       </form>
-      {message && <p>{message}</p>}
+      {loginMessage && <p>{loginMessage}</p>}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-.login-div, .signup-div{
+.login-div{
     text-align: center;
     /* border: solid 1px red; */
     margin-block: 0.5rem;
@@ -10,16 +10,15 @@
     flex-direction: column;
     gap: 1rem;
     text-align: left;
-    height: fit-content;
 }
 
-.login-div p, .signup-div p{
+p{
     font-size: 12px;
     color: red;
     font-weight: bold;
 }
 
-.login-div input, .signup-div input{
+input{
     margin-bottom: 1rem;
     width: 100%;
     font-size: 16px;
@@ -29,7 +28,7 @@
     padding-inline: 0.5rem;
 }
 
-.login-div button, .signup-div button{
+button{
     color: #e1e8ed;
     background-color: #067ec9;
     font-weight: bolder; 

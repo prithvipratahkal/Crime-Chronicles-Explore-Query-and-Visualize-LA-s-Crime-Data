@@ -2,29 +2,27 @@ import React, { useState } from 'react';
 import '../styles/Signup.css';
 
 
-const Signup = ({setIsLoggedIn}) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+const Signup = ({setIsLoggedIn, setUsername, setPassword, username, password}) => { 
+  const [signupMessage, setSignupMessage] = useState('');
 
   const handleSignup = (e) => {
     e.preventDefault();
     // const result = signup(username, password);
     
     if(username.length===0 || password.length===0){
-        setMessage("Missing Username or Password!");
+        setSignupMessage("Missing Username or Password!");
     }
 
     if(localStorage.getItem(`cc_${username}`)){
-        setMessage("Username already exists!");
+        setSignupMessage("Username already exists!");
     }
     else{
         localStorage.setItem(`cc_${username}`, username);
         localStorage.setItem(`cc_${username}_pw`, password);
-        setMessage("User created successfully.!");
+        setSignupMessage("User created successfully.!");
         setTimeout(() => {
             setIsLoggedIn(true);
-        }, 1000);    
+        }, 1500);    
     }
     
 
@@ -37,14 +35,16 @@ const Signup = ({setIsLoggedIn}) => {
   };
 
   return (
-    <div style={{textAlign:"center"}}>
-      <h2>Signup</h2>
+    <div className='signup-div'>
+      <div>
+        <small>New User?</small>
+        <h2>Sign Up</h2>
+      </div>
       <form onSubmit={handleSignup}>
         <div>
           <label>Username:</label>
           <input
             type="text"
-            value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
@@ -53,14 +53,13 @@ const Signup = ({setIsLoggedIn}) => {
           <label>Password:</label>
           <input
             type="password"
-            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
         <button type="submit">Signup</button>
       </form>
-      {message && <p>{message}</p>}
+      {signupMessage && <p>{signupMessage}</p>}
     </div>
   );
 };

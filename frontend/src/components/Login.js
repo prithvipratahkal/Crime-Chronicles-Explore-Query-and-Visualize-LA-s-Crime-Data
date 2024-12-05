@@ -2,27 +2,58 @@ import React, { useState } from 'react';
 import '../styles/Signup.css';
 
 
-const Login = ({setIsLoggedIn, setUsername, setPassword, username, password}) => {
-  const [loginMessage, setLoginMessage] = useState('');
+const Login = ({setIsLoggedIn}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // const result = login(username, password);
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent page reload on form submission
 
-    if(localStorage.getItem(`cc_${username}_pw`) === password){
-        setIsLoggedIn(true);
+    try {
+      const response = await fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }), // Send data to backend
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Login failed');
+      }
+
+      const result = await response.json();
+      setSuccessMessage(result.message || 'Login successful!');
+      setError('');
+      setIsLoggedIn(true); // Update logged-in state in parent component
+      console.log('Response from backend:', result);
+    } catch (err) {
+      setError(err.message);
+      setSuccessMessage('');
+      console.error('Login error:', err);
     }
-    else{
-        setLoginMessage("Username or Password is incorrect!");
-    }
-
-    // if (result.success) {
-    //   // Store the username in localStorage
-    //   localStorage.setItem('cc_username', username);
-    // }
-
-    // setMessage(result.message);
   };
+  
+  
+  
+  
+  
+  
+  // const [loginMessage, setLoginMessage] = useState('');
+
+  // const handleLogin = (e) => {
+  //   e.preventDefault();
+  //   // const result = login(username, password);
+
+  //   if(localStorage.getItem(`cc_${username}_pw`) === password){
+  //       setIsLoggedIn(true);
+  //   }
+  //   else{
+  //       setLoginMessage("Username or Password is incorrect!");
+  //   }
 
   return (
     <div className='login-div'>
@@ -31,25 +62,30 @@ const Login = ({setIsLoggedIn, setUsername, setPassword, username, password}) =>
         <h2>Log In</h2>
       </div>
       <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
+      <div>
+          <label htmlFor="email">Email:</label>
           <input
-            type="text"
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Password:</label>
+      </div>
+      <div>
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
+            id="password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
         <button type="submit">Login</button>
       </form>
-      {loginMessage && <p>{loginMessage}</p>}
+      {error && <p>{error}</p>}
+      {successMessage && <p>{successMessage}</p>}
     </div>
   );
 };

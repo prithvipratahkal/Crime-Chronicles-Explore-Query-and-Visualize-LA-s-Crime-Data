@@ -64,16 +64,17 @@ function App() {
               }} onClick={handleLogout}>Log Out</button>
           </div>
           <ChatHistory/>
-          <Visualization chartType={chartType} viewType={viewType} />
+
+          {/* <Visualization chartType={chartType} viewType={viewType} /> */}
           
-          <div style={{
+          {/* <div style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             }}>
             {viewType === 'chart' && <ChartTypeSelector chartType={chartType} setChartType={setChartType} />}
-          </div>
-          <QueryInput setViewType={handleViewTypeChange} chartType={chartType} setChartType={setChartType} />
+          </div> */}
+          <QueryInput setViewType={handleViewTypeChange} chartType={chartType} setChartType={setChartType} viewType={viewType} />
       </>
       )}
     </div>

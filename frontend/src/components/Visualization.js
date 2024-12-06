@@ -6,17 +6,17 @@ import ChartComponent from './ChartComponent'
 // Import the CSS file
 import '../styles/Visualization.css';
 
-function Visualization({ chartType, viewType }) { // just for sample output!
-  const chartData = {
-    title: 'Crime Distribution by Type',
-    labels: ['Theft', 'Assault', 'Burglary', 'Vandalism', 'Robbery'],
+function Visualization({ chartType, viewType, queryResult }) { // just for sample output!
+  const chartData = queryResult ? {
+    title: queryResult.title.text, // Use title from the response
+    labels: queryResult.series[0].data.map(item => item.name), // Get the locations (labels)
     datasets: [
       {
-        data: [120, 45, 67, 34, 78],
-        // backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+        data: queryResult.series[0].data.map(item => item.y), // Get the corresponding crime count (data)
+        // Optionally, you can add more customization like background colors here
       },
     ],
-  };
+  } : null;
 
   if (viewType === 'text') {
     return (
@@ -25,7 +25,7 @@ function Visualization({ chartType, viewType }) { // just for sample output!
         <textarea
           placeholder="AI-generated response will appear here..."
           readOnly
-          value="Sample Text Output: Theft is the most reported crime in 2022."
+          value= {queryResult?.message || "Sample Text Output: Theft is the most reported crime in 2022."}
         />
       </div>
     );
@@ -43,7 +43,9 @@ function Visualization({ chartType, viewType }) { // just for sample output!
   return (
     <div>
       {/* Send chartData and chartType to the ChartComponent */}
-      <ChartComponent chartData={chartData} chartType={chartType} />
+      {chartData && (
+        <ChartComponent chartData={chartData} chartType={chartType} />
+      )}
     </div>
   );
 

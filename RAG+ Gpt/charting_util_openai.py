@@ -27,7 +27,7 @@ def call_openai_with_retry(prompt, retries=3, delay=10):
             response = openai.ChatCompletion.create(
                 model="gpt-4",
                 messages=[
-                    {"role": "system", "content": "You are an assistant generating chart visualization data for queries."},
+                    {"role": "system", "content": "You are an assistant to generate either chart visualization data or summary for queries."},
                     {"role": "user", "content": prompt}
                 ],
                 timeout=60
@@ -39,7 +39,7 @@ def call_openai_with_retry(prompt, retries=3, delay=10):
     raise Exception("Failed to connect to OpenAI API after multiple attempts.")
    
 # Query FAISS index with enhanced functionality
-def query_and_visualize_with_openai(index, query, metadata, chart_type, model_name='all-MiniLM-L6-v2', k=10):
+def query_and_visualize_with_openai(index, query, metadata, chart_type, model_name='all-MiniLM-L6-v2', k=20):
     # Generate embedding for the query
     query_embedding = generate_query_embedding(query, model_name)
 
@@ -50,7 +50,7 @@ def query_and_visualize_with_openai(index, query, metadata, chart_type, model_na
     results = [{"metadata": metadata[idx], "distance": float(distances[0][i])} for i, idx in enumerate(indices[0])]
 
     # Use only the top 10 results for ChatGPT input
-    top_results = results[:10]
+    top_results = results[:20]
     chatgpt_prompt = f"""
     The user queried: "{query}".
     Based on the results below, generate a suitable visualization.
@@ -94,42 +94,42 @@ def transform_chart_data_to_format(generated_data):
     Returns:
         dict: Transformed chart data in the specified format.
     """
-    if generated_data["type"] == "pie":
-        transformed_data = {
-            "chart": {
-                "type": "pie"
-            },
-            "title": {
-                "text": "Crime Distribution"
-            },
-            "series": [
-                {
-                    "name": "Crime Count",
-                    "data": [
-                        {"name": label, "y": value} for label, value in zip(generated_data["labels"], generated_data["values"])
-                    ]
-                }
-            ]
-        }
-    else:
-        # Bar or Line Chart Format
-        transformed_data = {
-            "chart": {
-                "type": generated_data["type"]
-            },
-            "title": {
-                "text": "Number of Crimes by Time"
-            },
-            "xAxis": {
-                "categories": generated_data["labels"]
-            },
-            "series": [
-                {
-                    "name": "Time of Crime",
-                    "data": generated_data["values"]
-                }
-            ]
-        }
+    # if generated_data["type"] == "pie":
+    transformed_data = {
+        "chart": {
+            "type": "pie"
+        },
+        "title": {
+            "text": "Crime Distribution"
+        },
+        "series": [
+            {
+                "name": "Crime Count",
+                "data": [
+                    {"name": label, "y": value} for label, value in zip(generated_data["labels"], generated_data["values"])
+                ]
+            }
+        ]
+    }
+    # else:
+    #     # Bar or Line Chart Format
+    #     transformed_data = {
+    #         "chart": {
+    #             "type": generated_data["type"]
+    #         },
+    #         "title": {
+    #             "text": "Number of Crimes by Time"
+    #         },
+    #         "xAxis": {
+    #             "categories": generated_data["labels"]
+    #         },
+    #         "series": [
+    #             {
+    #                 "name": "Time of Crime",
+    #                 "data": generated_data["values"]
+    #             }
+    #         ]
+    #     }
     return transformed_data
 
 # Load embeddings and metadata
@@ -169,7 +169,7 @@ def interactive_session_with_openai(user_query, chart_type, embeddings_file, met
         try:
             # Query FAISS index
             query_embedding = generate_query_embedding(user_query, model_name='all-MiniLM-L6-v2')
-            distances, indices = index.search(query_embedding, k=10)
+            distances, indices = index.search(query_embedding, k=20)
 
             # Prepare results
             results = [{"metadata": metadata[idx], "distance": float(distances[0][i])} for i, idx in enumerate(indices[0])]
@@ -202,7 +202,7 @@ def interactive_session_with_openai(user_query, chart_type, embeddings_file, met
 
     try:
         # Query the index and get visualization data
-        results, chart_data = query_and_visualize_with_openai(index, user_query, metadata, chart_type, model_name='all-MiniLM-L6-v2', k=10)
+        results, chart_data = query_and_visualize_with_openai(index, user_query, metadata, chart_type, model_name='all-MiniLM-L6-v2', k=20)
 
         # Display results
         print("\nTop matches:")

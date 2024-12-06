@@ -12,7 +12,7 @@ import './styles/App.css';
 function App() {
   const [chartType, setChartType] = useState('pie'); // Default chart type
   const [viewType, setViewType] = useState('chart'); // Default view type
-  const [isLoggedIn, setIsLoggedIn] = useState(true) // User logged out by default
+  const [isLoggedIn, setIsLoggedIn] = useState(false) // User logged out by default
   
   // console.log("Chart type changed to : ", chartType);
 

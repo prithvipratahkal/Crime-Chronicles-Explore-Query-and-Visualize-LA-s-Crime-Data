@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Signup.css';
 
 
-const Signup = () => {
+const Signup = ({setIsLoggedIn}) => {
   
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -30,6 +30,7 @@ const Signup = () => {
 
       const result = await response.json();
       setSuccessMessage(result.message || 'Signup successful!');
+      setIsLoggedIn(true)
       setError('');
       console.log('Response from backend:', result);
     } catch (err) {

@@ -11,6 +11,7 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [queryResult, setQueryResult] = useState(null); // State to hold query result
+  const [loading, setLoading] = useState(false);
 
   const handleDropdownChange = (e) => {
     const viewType = e.target.value;
@@ -34,7 +35,7 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
     setResponseMessage('');
 
     try {
-
+      setLoading(true);
       const response = await fetch('http://localhost:5100/query', {
         method: 'POST',
         headers: {
@@ -42,6 +43,7 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
         },
         body: JSON.stringify({
           user_query: query,
+          user_email:"finaldemo@gmail.com",
           is_chart: isChart,
           chart_type: isChart ? chartType : undefined, // Include chart type if chart is selected
         }),
@@ -55,7 +57,8 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
       const result = await response.json();
       console.log('Response from backend:', result);
       setResponseMessage(result.message || 'Query processed successfully.');
-      setQueryResult(result.data); // Store the query result here
+      setQueryResult(result.data);
+      setLoading(false); // Store the query result here
     } catch (error) {
       console.error('Error processing query:', error);
       setErrorMessage(error.message || 'An error occurred while processing your query.');
@@ -104,6 +107,7 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
       }}>
         {responseMessage && <p>{responseMessage}</p>}
         {errorMessage && <p>{errorMessage}</p>}
+        {loading && <p>Loading...</p>}
       </div>
     </div>
   );

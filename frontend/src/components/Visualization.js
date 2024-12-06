@@ -7,7 +7,7 @@ import ChartComponent from './ChartComponent'
 import '../styles/Visualization.css';
 
 function Visualization({ chartType, viewType, queryResult }) { // just for sample output!
-  const chartData = queryResult ? {
+  const chartData = queryResult && queryResult?.title?.text ? {
     title: queryResult.title.text, // Use title from the response
     labels: queryResult.series[0].data.map(item => item.name), // Get the locations (labels)
     datasets: [
@@ -22,11 +22,19 @@ function Visualization({ chartType, viewType, queryResult }) { // just for sampl
     return (
       <div className="text-container">
         <h3>Response</h3>
-        <textarea
-          placeholder="AI-generated response will appear here..."
-          readOnly
-          value= {queryResult?.message || "Sample Text Output: Theft is the most reported crime in 2022."}
-        />
+        {
+          queryResult?.title ? (<textarea
+            placeholder="AI-generated response will appear here..."
+            readOnly
+            value= {"Sample Text Output: Theft is the most reported crime in 2022."}
+          />) :
+          (<textarea
+            placeholder="AI-generated response will appear here..."
+            readOnly
+            value= {queryResult}
+          />)
+        }
+        
       </div>
     );
   }

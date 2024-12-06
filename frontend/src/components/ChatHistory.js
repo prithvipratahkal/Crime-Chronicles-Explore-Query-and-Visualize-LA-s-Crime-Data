@@ -1,30 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/ChatHistory.css';
 
 
 function ChatHistory() {
-    const [messages, setMessages] = useState([
-        { sender: 'user', text: "What's the crime rate in LA this week?" },
-        { sender: 'chatbot', text: "The crime rate in LA has decreased by 10% this week." },
-        { sender: 'user', text: "Can you provide a report on the traffic accidents?" },
-        { sender: 'chatbot', text: "Yes, traffic accidents have been increasing in downtown LA over the last month." },
-    // More messages can be added dynamically here
-      ]);
+    useEffect(() => {
+      fetchHistory();
+    },[])
+
+    const fetchHistory = () => {
+      fetch('http://localhost:5100/history?user_email=finaldemo@gmail.com&page_no='+offset)
+      .then(res => res.json())
+      .then(response =>  {
+        if(response.length === 0){
+          setEnd(true);
+        }
+        setOffset(offset + response?.length);
+        setMessages(messages.concat(response));
+      });
+    }
+    const [offset, setOffset] = useState(0);
+    const [end, setEnd] = useState(false);
+    const [messages, setMessages] = useState([]);
 
   return (
     <div className="chat-history">
       <h2>Chat History</h2>
       <div className="chat-history-items">
         {messages.map((message, index) => (
+          <div className='message'>
             <div
                 key={index}
-                className={`message ${message.sender}`}
+                className={`user`}
             >
                 <div className="message-content">
-                    {message.text}
+                    {message.user_query}
                 </div>
             </div>
+            <div
+                key={index}
+                className={`chatbot`}
+            >
+                <div className="message-content">
+                    {message.response}
+                </div>
+            </div>
+          </div>
             ))}
+            {
+              !end && (
+                <button onClick={fetchHistory}>Load More</button>
+              )
+            }
       </div>
     </div>
   );

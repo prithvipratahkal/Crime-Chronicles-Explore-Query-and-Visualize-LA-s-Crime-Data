@@ -13,32 +13,34 @@
   
 .message {
 display: flex;
+flex-direction: column;
 gap: 1rem;
 }
 
-.message.user {
+.user {
 justify-content: flex-end;
 padding-bottom: 2rem;
+align-self: flex-end;
 }
 
-.message.chatbot {
+.chatbot {
 justify-content: flex-start;
 padding-bottom: 2rem;
+max-width: 70%;
 }
 
 .message-content {
-max-width: 70%;
 padding: 10px;
 border-radius: 15px;
 }
 
-.message.user .message-content {
+.user .message-content {
 background-color: #067ec9;  /* User messages */
 background-color: #333;  /* User messages */
 color: white;
 }
 
-.message.chatbot .message-content {
+.chatbot .message-content {
 background-color: #067ec9;  /* User messages */
 color: white;
 }

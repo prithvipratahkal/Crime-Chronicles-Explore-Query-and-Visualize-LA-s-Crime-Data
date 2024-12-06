@@ -54,16 +54,48 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 # Response model for the query API
-class QueryResponse(BaseModel):
-    results: Optional[List[dict]]
-    message: str
-    history: Optional[List[dict]]
+# class QueryResponse(BaseModel):
+#     status: str
+#     data: str
 
-class HistoryItem(BaseModel):
-    id: int
-    user_email: str
-    user_query: str
-    response: str
+class HistoryResponse(BaseModel):
+    queries: List[str]
+    replies: List[str]
+
+
+@app.get("/history", response_model=HistoryResponse)
+async def get_history(user_email: str = Query(..., alias="user_email"), page_no: int = Query(..., alias="page_no")):
+    """
+    API to get the history of a user's queries and responses.
+    """
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT user_query, response
+                FROM history 
+                WHERE user_email = %s
+                ORDER BY created_at DESC
+                LIMIT 5
+                OFFSET %s
+                """,
+                (user_email, page_no)
+            )
+            history = cursor.fetchall()
+            
+            # # Separate the queries and responses into two lists
+            # queries = [item[0] for item in history]  # Extracting user_query
+            # replies = [item[1] for item in history]  # Extracting response
+            
+            # Return the structured response
+            return JSONResponse(content=history)
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve history: {str(e)}")
+    finally:
+        conn.close()
+    
 
 @app.post("/signup")
 async def signup(request: Request):
@@ -123,6 +155,7 @@ async def login(request: Request):
         conn.close()
 
 
+
 # @app.post("/query", response_model=QueryResponse)
 # async def query_api(request: Request):
 #     """API to query the CrimeSearchEngine."""
@@ -171,7 +204,7 @@ async def login(request: Request):
 #     return QueryResponse(results=[], message="Query executed successfully.", history=None)
 
 
-@app.post("/query", response_model=QueryResponse)
+@app.post("/query")
 async def query_api(request: Request):
     """API to query the CrimeSearchEngine."""
     body = await request.json()
@@ -189,6 +222,12 @@ async def query_api(request: Request):
         'http://localhost:8000/query',
         json={"query": user_query, "chart_type": chart_type}
     ).json()
+    
+    if chart_type:
+        response_data_store=json.dumps(response_data)
+    else:
+        response_data_store=response_data
+        
 
     # try:
     #     if is_chart == 1:
@@ -208,30 +247,30 @@ async def query_api(request: Request):
 
     # Store query and response in history
     conn = get_db_connection()
-    # try:
-    #     with conn.cursor() as cursor:
-    #         cursor.execute(
-    #             """
-    #             INSERT INTO history (user_email, user_query, response) 
-    #             VALUES (%s, %s, %s)
-    #             ON CONFLICT (user_email) 
-    #             DO UPDATE SET user_query = EXCLUDED.user_query, response = EXCLUDED.response, created_at = CURRENT_TIMESTAMP
-    #             """,
-    #             (user_email, user_query, json.dumps(response_data))
-    #         )
-    #         conn.commit()
-    # except Exception as e:
-    #     conn.rollback()
-    #     raise HTTPException(status_code=500, detail=f"Failed to store query history: {str(e)}")
-    # finally:
-    #     conn.close()
+    try:
+        with conn.cursor() as cursor:
+           cursor.execute(
+                """
+                INSERT INTO history (user_email, user_query, response)
+                VALUES (%s, %s, %s)
+                """,
+                (user_email, user_query, response_data_store)
+            )
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to store query history: {str(e)}")
+    finally:
+        conn.close()
 
     # Explicitly set history to None
-    return JSONResponse(content=response_data)
+    if chart_type:
+        return JSONResponse(content={"data":response_data})
+    return {"data": response_data}
     #return response_data
 
     
-@app.get("/history", response_model=List[HistoryItem])
+@app.get("/history")
 async def get_history(email: str = Query(..., alias="email")):
     """
     API to get the history of a user's queries and responses.

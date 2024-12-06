@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import '../styles/QueryInput.css';
+import Visualization from './Visualization';
+import ChartTypeSelector from './ChartTypeSelector';
 
-function QueryInput({ setViewType, chartType, setChartType }) {
+
+function QueryInput({ setViewType, chartType, setChartType, viewType }) {
 
   const [query, setQuery] = useState('');
   const [isChart, setIsChart] = useState(true); // Default view is chart
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [queryResult, setQueryResult] = useState(null); // State to hold query result
 
   const handleDropdownChange = (e) => {
     const viewType = e.target.value;
@@ -31,6 +34,7 @@ function QueryInput({ setViewType, chartType, setChartType }) {
     setResponseMessage('');
 
     try {
+
       const response = await fetch('http://localhost:5100/query', {
         method: 'POST',
         headers: {
@@ -51,36 +55,34 @@ function QueryInput({ setViewType, chartType, setChartType }) {
       const result = await response.json();
       console.log('Response from backend:', result);
       setResponseMessage(result.message || 'Query processed successfully.');
+      setQueryResult(result.data); // Store the query result here
     } catch (error) {
       console.error('Error processing query:', error);
       setErrorMessage(error.message || 'An error occurred while processing your query.');
     }
   };
 
-  // const [query, setQuery] = useState('');
-  // const handleDropdownChange = (e) => {
-  //   setViewType(e.target.value); // Pass the selected value (Chart/Text) to the parent
-  // };
-
-  // const handleInputKeyDown = (e) => {
-  //   if (e.key === 'Enter') {
-  //     if (query.trim() !== '') {
-  //       e.preventDefault(); // Prevent the default form submission
-  //       console.log("query entered by user: ", {query});
-  //       // setQuery(''); // Clear the input field
-  //     }
-  //   }
-  // };
-
-  // const handleSubmit = () => {
-  //   if (query.trim() !== '') {
-  //     console.log("query entered by user: ", {query});
-  //     // setQuery(''); // Clear the input field
-  //   }
-  // };
-  
   return (
     <div className="query-input">
+      <div style={{
+        marginBlock:'2rem',
+      display:"flex",
+      flexDirection:"column",
+      width:"100vw"
+      }}>
+        <Visualization chartType={chartType} viewType={viewType} queryResult={queryResult}/>
+
+        <div style={{
+              display: "flex",
+              width:'80%',
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginInline:'auto'
+              }}>
+              {viewType === 'chart' && <ChartTypeSelector chartType={chartType} setChartType={setChartType} />}
+        </div>
+
+      </div>
       <div>
         <select onChange={handleDropdownChange}>
           <option value="chart">Chart</option>

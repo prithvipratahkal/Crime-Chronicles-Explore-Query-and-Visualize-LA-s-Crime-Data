@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Signup.css';
 
 
-const Signup = ({setIsLoggedIn}) => {
+const Signup = () => {
   
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -15,6 +15,7 @@ const Signup = ({setIsLoggedIn}) => {
     e.preventDefault(); // Prevent page reload on form submission
 
     try {
+
       const response = await fetch('http://localhost:5100/signup', {
         method: 'POST',
         headers: {

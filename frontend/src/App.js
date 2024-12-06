@@ -12,7 +12,7 @@ import './styles/App.css';
 function App() {
   const [chartType, setChartType] = useState('pie'); // Default chart type
   const [viewType, setViewType] = useState('chart'); // Default view type
-  const [isLoggedIn, setIsLoggedIn] = useState(false) // User logged out by default
+  const [isLoggedIn, setIsLoggedIn] = useState(true) // User logged out by default
   
   // console.log("Chart type changed to : ", chartType);
 
@@ -64,16 +64,17 @@ function App() {
               }} onClick={handleLogout}>Log Out</button>
           </div>
           <ChatHistory/>
-          <Visualization chartType={chartType} viewType={viewType} />
+
+          {/* <Visualization chartType={chartType} viewType={viewType} /> */}
           
-          <div style={{
+          {/* <div style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             }}>
             {viewType === 'chart' && <ChartTypeSelector chartType={chartType} setChartType={setChartType} />}
-          </div>
-          <QueryInput setViewType={handleViewTypeChange} chartType={chartType} setChartType={setChartType} />
+          </div> */}
+          <QueryInput setViewType={handleViewTypeChange} chartType={chartType} setChartType={setChartType} viewType={viewType} />
       </>
       )}
     </div>

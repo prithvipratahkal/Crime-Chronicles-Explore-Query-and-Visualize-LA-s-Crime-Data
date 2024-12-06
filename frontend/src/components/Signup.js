@@ -15,7 +15,8 @@ const Signup = () => {
     e.preventDefault(); // Prevent page reload on form submission
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/signup', {
+
+      const response = await fetch('http://localhost:5100/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,6 +31,7 @@ const Signup = () => {
 
       const result = await response.json();
       setSuccessMessage(result.message || 'Signup successful!');
+      setIsLoggedIn(true)
       setError('');
       console.log('Response from backend:', result);
     } catch (err) {

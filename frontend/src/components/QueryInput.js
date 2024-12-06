@@ -12,8 +12,6 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [queryResult, setQueryResult] = useState(null); // State to hold query result
 
-
-
   const handleDropdownChange = (e) => {
     const viewType = e.target.value;
     setViewType(viewType); // Notify parent of the change
@@ -36,7 +34,8 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
     setResponseMessage('');
 
     try {
-      const response = await fetch('http://localhost:8000/query', {
+
+      const response = await fetch('http://localhost:5100/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +62,6 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
     }
   };
 
-
   return (
     <div className="query-input">
       <div style={{
@@ -85,7 +83,6 @@ function QueryInput({ setViewType, chartType, setChartType, viewType }) {
         </div>
 
       </div>
-      
       <div>
         <select onChange={handleDropdownChange}>
           <option value="chart">Chart</option>

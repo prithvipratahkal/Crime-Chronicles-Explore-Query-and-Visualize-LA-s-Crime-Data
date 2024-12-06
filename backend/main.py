@@ -7,7 +7,8 @@ from psycopg2.extras import RealDictCursor
 from passlib.context import CryptContext
 from fastapi.middleware.cors import CORSMiddleware
 import requests
-
+from fastapi.responses import JSONResponse
+import json
 app = FastAPI()
 
 # Configure CORS
@@ -19,22 +20,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize the search engine
-search_engine = CrimeSearchEngine(
-    embeddings_file="embeddings.npy",
-    metadata_file="metadata.json",
-    model_name="all-MiniLM-L6-v2",
-    hf_token="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"
-)
-search_engine.setup()
+
+
 
 # Database connection settings
 DB_CONFIG = {
-    "host": "localhost",
+    "host": "ce0lkuo944ch99.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
     "port": 5432,
-    "database": "user_db",
-    "user": "user",
-    "password": "password"
+    "database": "d13rbt7mg7hn29",
+    "user": "u4ibo387dcdtna",
+    "password": "pacd72ed23e71851106933f7dab36e222133126c2881c48b7ed97da8a5ebd2e41"
 }
 
 # Initialize password hashing
@@ -213,26 +208,27 @@ async def query_api(request: Request):
 
     # Store query and response in history
     conn = get_db_connection()
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute(
-                """
-                INSERT INTO history (user_email, user_query, response) 
-                VALUES (%s, %s, %s)
-                ON CONFLICT (user_email) 
-                DO UPDATE SET user_query = EXCLUDED.user_query, response = EXCLUDED.response, created_at = CURRENT_TIMESTAMP
-                """,
-                (user_email, user_query, response_data)
-            )
-            conn.commit()
-    except Exception as e:
-        conn.rollback()
-        raise HTTPException(status_code=500, detail=f"Failed to store query history: {str(e)}")
-    finally:
-        conn.close()
+    # try:
+    #     with conn.cursor() as cursor:
+    #         cursor.execute(
+    #             """
+    #             INSERT INTO history (user_email, user_query, response) 
+    #             VALUES (%s, %s, %s)
+    #             ON CONFLICT (user_email) 
+    #             DO UPDATE SET user_query = EXCLUDED.user_query, response = EXCLUDED.response, created_at = CURRENT_TIMESTAMP
+    #             """,
+    #             (user_email, user_query, json.dumps(response_data))
+    #         )
+    #         conn.commit()
+    # except Exception as e:
+    #     conn.rollback()
+    #     raise HTTPException(status_code=500, detail=f"Failed to store query history: {str(e)}")
+    # finally:
+    #     conn.close()
 
     # Explicitly set history to None
-    return QueryResponse(results=[], message="Query executed successfully.", history=None)
+    return JSONResponse(content=response_data)
+    #return response_data
 
     
 @app.get("/history", response_model=List[HistoryItem])

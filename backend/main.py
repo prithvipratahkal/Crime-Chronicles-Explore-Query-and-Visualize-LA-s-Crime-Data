@@ -5,6 +5,7 @@ from crime_search_engine import CrimeSearchEngine
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from passlib.context import CryptContext
+import requests
 
 app = FastAPI()
 
@@ -171,24 +172,30 @@ async def query_api(request: Request):
     body = await request.json()
     user_email = body.get("user_email")
     user_query = body.get("user_query")
-    is_chart = body.get("is_chart")
+    #is_chart = body.get("is_chart")
+    chart_type = body.get("chart_type")
     response_data = ""
-    print(f"starting the method : {user_email} {user_query} {is_chart}")
+    print(f"starting the method : {user_email} {user_query}")
 
     if not user_query:
         raise HTTPException(status_code=400, detail="Missing user query")
 
-    try:
-        if is_chart == 1:
-            print(f"Inside chart")
-            chart_type = body.get("chart_type")
-            print(f"CHart type is {chart_type}")
-            response_data = search_engine.create_charts(user_query, chart_type)
-        else:
-            print(f"Inside text")
-            response_data = search_engine.texting_with_openai(user_query)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    response_data = requests.post(
+        'http://localhost:8000/query',
+        json={"query": user_query, "chart_type": chart_type}
+    ).json()
+
+    # try:
+    #     if is_chart == 1:
+    #         print(f"Inside chart")
+    #         chart_type = body.get("chart_type")
+    #         print(f"CHart type is {chart_type}")
+    #         response_data = search_engine.create_charts(user_query, chart_type)
+    #     else:
+    #         print(f"Inside text")
+    #         response_data = search_engine.texting_with_openai(user_query)
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=str(e))
 
     # Handle empty response
     if not response_data:
